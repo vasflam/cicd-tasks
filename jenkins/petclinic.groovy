@@ -23,12 +23,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh "mvn clean package"
+                sh "mvn package"
             }
         }
 
         stage('Create docker image') {
-            steps{
+            steps {
                 sh "mvn spring-boot:build-image"
             }
         }
