@@ -1,0 +1,37 @@
+version: "3.1"
+services:
+    jenkins:
+      container_name: jenkins
+      image: jenkins/jenkins:lts-jdk11
+      volumes:
+        - jenkins_home:/var/jenkins_home
+      networks:
+        - jenkins
+
+    agent:
+      container_name: agent
+      image: jenkins/ssh-agent
+      env_file: 
+        - agent.env
+      volumes:
+        - ./agent.pub:/home/jenkins/.ssh/authorized_keys
+      networks:
+        - jenkins
+
+    nginx:
+      container_name: jenkins-proxy
+      image: nginx:alpine
+      volumes:
+        - ./nginx-jenkins.conf:/etc/nginx/conf.d/jenkins.conf
+      ports:
+        - 8080:8080
+      networks:
+        - default
+        - jenkins
+
+networks:
+  jenkins:
+
+volumes:
+  jenkins_home:
+
